@@ -10,10 +10,11 @@ AI-powered Git commit message generator with emojis. Analyzes your staged change
 - 🤖 **AI-Powered**: Generates commit messages using OpenAI or your local LLM
 - 🎨 **Emoji Support**: Automatically includes relevant emojis
 - 🌐 **Flexible**: Works with OpenAI API, LM Studio, Ollama, llama.cpp, and more
-- ⚙️ **Configurable**: Global and project-specific configurations
+- ⚙️ **Configurable**: 3-layer configuration (Internal Defaults -> Global -> Project)
 - 🎯 **Smart Filtering**: Automatically ignores lock files, binaries, and irrelevant files
 - 🔄 **Interactive**: Choose to accept, edit, regenerate, or cancel
 - 🔌 **Git Hook**: Install as a `prepare-commit-msg` hook for seamless integration
+- 🔍 **Verbose Mode**: Debug configuration sources and API payloads
 
 ## 📦 Installation
 
@@ -73,45 +74,52 @@ Now when you run `git commit`, CommAIt will automatically generate a commit mess
 
 ## ⚙️ Configuration
 
-### Global Configuration (`~/.config/commait/config.json`)
+CommAIt uses a 3-layer merge strategy: **Internal Defaults** ➔ **Global Config** ➔ **Project Config**.
+
+### 1. Global Configuration (`~/.config/commait/config.json`)
 
 ```json
 {
   "apiKey": "sk-your-openai-key",
   "baseUrl": "https://api.openai.com/v1",
   "model": "gpt-4o-mini",
-  "systemPrompt": "You are a professional Git commit message assistant...",
-  "filters": ["package-lock.json", "*.svg", "*.min.js"]
+  "maxTokens": 4096,
+  "systemPrompt": "Custom global instructions...",
+  "filters": ["package-lock.json", "*.svg"]
 }
 ```
 
-### Project-Specific Configuration (`.commait.json`)
+### 2. Project-Specific Configuration (`.commait.json`)
 
 Create a `.commait.json` file in your project root:
 
 ```json
 {
-  "prompt": "Generate commit messages in Spanish, using Jira format: [TICKET-123]: description",
+  "prompt": "Generate commit messages in Spanish",
   "model": "claude-3-5-sonnet",
-  "filters": ["*.log", "*.tmp"]
+  "maxTokens": 2048,
+  "filters": ["*.log"]
 }
 ```
 
-Project configuration overrides global settings.
+*Note: In project configuration, the field is `prompt` instead of `systemPrompt` for brevity. It overrides any global instructions.*
 
 ## 📖 Usage
 
 ### Basic Commands
 
 ```bash
-# Generate commit message interactively
+# Generate commit message interactively from staged changes
 commait commit
 
-# Generate commit message and skip interactive prompt
-commait commit --accept
+# Use a custom message (bypass AI)
+commait commit -m "feat: my manual message"
 
-# Generate message for specific file
+# Generate message for a specific file (even if not staged)
 commait generate -d src/index.ts
+
+# Show verbose output (config paths, prompt sources, etc.)
+commait --verbose commit
 
 # Install as Git hook
 commait install-hook
@@ -120,25 +128,21 @@ commait install-hook
 commait install-hook --force
 ```
 
+### Global Options
+
+- `-p, --project`: Use project-specific configuration (default)
+- `-g, --global`: Use global configuration only
+- `-v, --verbose`: Show detailed debug information
+- `-V, --version`: Show version number
+
 ### Interactive Options
 
-When running `commait commit`, you'll be presented with these options:
+When running `commait commit`, you'll be presented with:
 
-- **✓ Accept and commit**: Use the generated message
-- **✏️ Edit in editor**: Open your default editor to customize
-- **🔄 Regenerate message**: Generate a new message
-- **⚠ Cancel commit**: Cancel and unstage changes
-
-## 🎨 Supported LLMs
-
-CommAIt works with any LLM that implements the OpenAI-compatible API:
-
-- **OpenAI**: `https://api.openai.com/v1`
-- **Anthropic**: `https://api.anthropic.com/v1` (with custom handling)
-- **LM Studio**: `http://localhost:1234/v1`
-- **Ollama**: `http://localhost:11434/v1`
-- **llama.cpp**: `http://localhost:8080/v1`
-- **Any OpenAI-compatible API**
+- **✓ Accept (y)**: Use the message and execute `git commit`
+- **✏️ Edit (e)**: Open your default editor to customize
+- **🔄 Regenerate (r)**: Generate a new message using AI
+- **⚠ Cancel (q)**: Cancel the operation
 
 ## 📁 Project Structure
 
@@ -147,6 +151,7 @@ commait/
 ├── src/
 │   ├── index.ts         # CLI entry point
 │   ├── config/
+│   │   ├── defaults.ts  # Internal default values
 │   │   ├── global.ts    # Global config loader
 │   │   └── local.ts     # Project config loader
 │   ├── git/
@@ -156,52 +161,8 @@ commait/
 │   │   └── prompt.ts    # Prompt builder
 │   └── hook/
 │       └── index.ts     # Git hook logic
-├── dist/                 # Build output
-├── package.json
-├── tsconfig.json
 └── README.md
 ```
-
-## 🔧 Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run in development mode
-npm run dev
-
-# Build for production
-npm run build
-
-# Run tests
-npm test
-```
-
-## 🐛 Troubleshooting
-
-### "API key not found"
-
-Make sure you've set your API key:
-
-```bash
-export OPENAI_API_KEY="sk-your-key"
-```
-
-Or configure it in `~/.config/commait/config.json`.
-
-### "No files are staged"
-
-Add files before running CommAIt:
-
-```bash
-git add .
-commait commit
-```
-
-### Connection timeout
-
-If you're using a local LLM, make sure it's running and accessible.
 
 ## 📝 License
 
@@ -210,19 +171,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## 🙏 Acknowledgments
 
 - Built with ❤️ by [Luis Romero](https://github.com/luiseromerog)
-- UI powered by [@clack/prompts](https://github.com/clack-contrib/prompts)
 - CLI framework: [commander](https://github.com/tj/commander.js)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`commait commit`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ---
 
-**Made with CommAIt** 🚀\n<!-- Dummy change for testing -->
+**Made with CommAIt** 🚀
