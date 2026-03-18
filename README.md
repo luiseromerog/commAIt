@@ -21,7 +21,7 @@ AI-powered Git commit message generator with emojis. Analyzes your staged change
 ### Via npm
 
 ```bash
-npm install -g commait
+npm install -g @lerg96/commait
 ```
 
 ### Prerequisites

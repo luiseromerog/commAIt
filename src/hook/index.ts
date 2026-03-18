@@ -177,7 +177,7 @@ export function installGitHook(): void {
 # This hook generates AI-assisted commit messages
 
 cd "$(dirname "$0")/.."
-node "${path.join(cwd, 'node_modules', 'commait', 'dist', 'index.js')}" commit`;
+node "${path.join(cwd, 'node_modules', '@lerg96', 'commait', 'dist', 'index.js')}" commit`;
 
   fs.writeFileSync(hookPath, hookScript);
   fs.chmodSync(hookPath, 0o755);

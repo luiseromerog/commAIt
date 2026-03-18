@@ -1,6 +1,6 @@
 {
-  "name": "commait",
-  "version": "1.0.0",
+  "name": "@lerg96/commait",
+  "version": "1.0.1",
   "description": "🚀 AI-powered Git commit message generator with emojis. Analyzes your staged changes and generates concise, descriptive commit messages using OpenAI or your local LLM (LM Studio, Ollama, llama.cpp).",
   "main": "dist/index.js",
   "bin": {
@@ -59,6 +59,8 @@
   "files": [
     "dist/",
     "README.md",
+    "LICENSE",
+    "AGENTS.md",
     ".commait.json",
     ".gitignore"
   ]
