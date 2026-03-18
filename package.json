@@ -27,7 +27,7 @@
     "emoji",
     "automation"
   ],
-  "author": "CommAIt Team",
+  "author": "Luis Romero",
   "license": "MIT",
   "dependencies": {
     "@clack/prompts": "^1.1.0",
@@ -42,14 +42,14 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/commait.git"
-  },
-  "bugs": {
-    "url": "https://github.com/yourusername/commait/issues"
-  },
-  "homepage": "https://github.com/yourusername/commait#readme",
+"repository": {
+  "type": "git",
+  "url": "git+https://github.com/luiseromerog/commait.git"
+},
+"bugs": {
+  "url": "https://github.com/luiseromerog/commait/issues"
+},
+  "homepage": "https://github.com/luiseromerog/commait#readme",
   "files": [
     "dist/",
     "README.md",

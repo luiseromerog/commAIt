@@ -209,7 +209,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- Built with ❤️ using Node.js and TypeScript
+- Built with ❤️ by [Luis Romero](https://github.com/luiseromerog)
 - UI powered by [@clack/prompts](https://github.com/clack-contrib/prompts)
 - CLI framework: [commander](https://github.com/tj/commander.js)
 
